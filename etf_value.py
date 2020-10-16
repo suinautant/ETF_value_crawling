@@ -46,8 +46,11 @@ def get_bs_obj_etfdb(etf_code):
 def get_value(etf_name, etf_code):
     bs_obj = get_bs_obj(etf_code)
 
-    div_pe = bs_obj.find("div", {"class":"float-left in-left col-priceEarnings"})
-    div_pb = bs_obj.find("div", {"class":"float-left in-right col-priceBook"})
+    # comment 20201016
+    # div_pe = bs_obj.find("div", {"class":"float-left in-left col-priceEarnings"})
+    # div_pb = bs_obj.find("div", {"class":"float-left in-right col-priceBook"})
+    div_pe = bs_obj.find("div", {"class":"col-priceEarnings"})
+    div_pb = bs_obj.find("div", {"class":"col-priceBook"})
 
     date = div_pe("span", {"class":"as-of-date"})
     span_pe_data = div_pe("span", {"class":"data"})
@@ -91,14 +94,18 @@ for url_value in url_values:
     etf_name, date, pe, pb = get_value(url_value[0], url_value[1])
 
     data_input = "%s\t%s\t" % (pe.strip(), pb.strip())
+
+    # for debug
+    # print(data_input)
     f_input.write(data_input)
 
 # etfDB Homepage crawling
 for i in etf_db_list:
     result_name, result_data = get_value_etfdb(i)
     result = "%s\t\t" % (result_data.strip())
-    print(result)
 
+    # for debug
+    # print(result)
     f_input.write(result)
 
 f_input.close()
